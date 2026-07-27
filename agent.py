@@ -9,6 +9,8 @@ from prompt import get_system_prompt
 
 from llm import call_llm
 
+from utils import assistant_message_dict
+
 
 
 def agent_loop(messages: list):
@@ -21,3 +23,11 @@ def agent_loop(messages: list):
         system = get_system_prompt()
         # 2、调用大模型
         response = call_llm(system, messages, max_tokens, model)
+        choice = response.choices[0]
+        # 3、获取输出的信息
+        assistant = choice.message
+        # 4、放入这个messages里面
+        messages.append(assistant_message_dict(assistant))
+        # 5、如果助手没有工具的调用，那么就会终止循环
+        if not assistant.tool_calls:
+            return

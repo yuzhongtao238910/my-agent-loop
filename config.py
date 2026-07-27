@@ -25,4 +25,6 @@ client = OpenAI(
 )
 
 # 默认最大的token的数量哈就是8000
+# 指的是模型输出得token得上限，也就是生成的内容 一般来说一个汉字等于1~2个token
+# 
 DEFAULT_MAX_TOKENS = 8000

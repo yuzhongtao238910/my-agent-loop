@@ -1,5 +1,6 @@
 
 from agent import agent_loop
+
 def main():
     print("输入问题，回车发送，输入q退出提问。\n")
 
@@ -9,7 +10,7 @@ def main():
     while True:
         try:
             # 获取用户的输入，带有提示符号
-            query = input("\x1b[36m] >> \x1b[0m]")
+            query = input("\x1b[36m >> \x1b[0m")
         except (EOFError, KeyboardInterrupt):
             # 异常的时候退出循环
             break;
@@ -28,3 +29,7 @@ def main():
         if final.get("role") == "assistant" and final.get("content"):
             print(final["content"])
         
+
+
+if __name__ == "__main__":
+    main()
