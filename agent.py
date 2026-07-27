@@ -31,3 +31,4 @@ def agent_loop(messages: list):
         # 5、如果助手没有工具的调用，那么就会终止循环
         if not assistant.tool_calls:
             return
+        

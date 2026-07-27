@@ -1,5 +1,6 @@
 
 
+from tools.schema import TOOLS
 from config import client
 
 # 定义调用大模型的函数
@@ -19,4 +20,5 @@ def call_llm(system: str, messages: list, max_tokens: int, model: str):
             *messages
         ],
         max_tokens=max_tokens,
+        tools=TOOLS,
     )
