@@ -41,7 +41,7 @@ def run_bash(command: str) -> str:
 
 
 
-def run_read(path: str, limit: int | None) -> str:
+def run_read(path: str, limit: int | None = None) -> str:
     try:
         # 只能读取当前正在这个工作目录下面的这个子文件
         # 使用这个safe_path 校验并且获取文件的路径 并且指定这个编码读取内容并且按行分割
@@ -67,12 +67,21 @@ def run_write(path: str, content: str|None) -> str:
     except Exception as e:
         return f"错误: {str(e)}"
 
+
+def run_edit(path: str, old_text: str, new_text: str) -> str:
+    try:
+        # 获取安全路径
+        file_path = safe_path(path)
+        
+    except Exception as e:
+        return f"错误: {str(e)}"
+
 # 定义字典，把工具的名称和真正的处理函数关联起来
 TOOL_HANDLERS = {
     "bash": run_bash,
     "cmd": run_bash,
     "read_file": run_read,
     "write_file": run_write,
-    # "edit_file": run_edit,
+    "edit_file": run_edit,
     # "glob": run_glob
 }
