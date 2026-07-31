@@ -54,16 +54,10 @@ def run_read(path: str, limit: int|None) -> str:
         return f"错误: {str(e)}"
 
 
-def run_write(path: str, limit: int|None) -> str:
+def run_write(path: str, content: str|None) -> str:
     try:
-        # 只能读取当前正在这个工作目录下面的这个子文件
-        # 使用这个safe_path 校验并且获取文件的路径 并且指定这个编码读取内容并且按行分割
-        lines = safe_path(path).read_text(encoding=TEXT_ENCODING).splitlines()
-        if limit and limit < len(lines):
-            # 截取前这个limit行
-            lines = lines[:limit] + [f"...(还有{len(lines)-limit}行)"]
-        # 返回数据
-        return "\n".join(lines)
+        
+        pass
     except Exception as e:
         return f"错误: {str(e)}"
 
@@ -73,6 +67,6 @@ TOOL_HANDLERS = {
     "cmd": run_bash,
     "read_file": run_read,
     "write_file": run_write,
-    "edit_file": run_edit,
-    "glob": run_glob
+    # "edit_file": run_edit,
+    # "glob": run_glob
 }
