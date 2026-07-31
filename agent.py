@@ -13,6 +13,8 @@ from utils import assistant_message_dict
 
 from tools.executor import execute_tool
 
+from permission import check_permission
+
 
 
 def agent_loop(messages: list):
@@ -41,6 +43,15 @@ def agent_loop(messages: list):
             print(tool_call)
             args = json.loads(tool_call.function.arguments or '{}')
             print(f"\x1b[36m {name}{json.dumps(args, ensure_ascii=False)} \x1b[0m")
+            # 进行权限的检查操作，对工具调用进行权限检查
+            reason = check_permission(name, args)
+            if reason is not None:
+                # 如果没有通过权限检查，将权限被拒绝的原因信息添加到消息列表之中
+                messages.append({
+                    "role": "tool", # 角色是工具
+                    "content": reason + ".", # 拒绝的原因
+                    "tool_call_id": tool_call.id # 关联的工具id
+                })
             # 执行工具，获取输出的结果
             output = execute_tool(name, args)
             # 需要把结果放入到这个消息列表之中

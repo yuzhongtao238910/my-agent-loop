@@ -40,3 +40,10 @@
 - write_file
 - edit_file
 - glob
+
+
+## 权限
+- 权限：一种权限台，三种结果，harness将allow ask deny 决策放到了模型之外
+- 工具执行之前，需要先做这个权限判断
+- check_permission
+- 
