@@ -1,8 +1,9 @@
 import os
 import subprocess
 from utils import decode_subprocess_output, safe_path
-from config import TEXT_ENCODING
+from config import TEXT_ENCODING, WORKDIR
 import platform
+import glob
 """
 处理器
 """
@@ -72,6 +73,27 @@ def run_edit(path: str, old_text: str, new_text: str) -> str:
     try:
         # 获取安全路径
         file_path = safe_path(path)
+        # 读取文件内容
+        text = file_path.read_text()
+        if old_text not in text:
+            return f"错误:在{path}之中没有找到指定的文本{old_text}"
+        file_path.read_text(text.replace(old_text, new_text, 1), encoding=TEXT_ENCODING)
+        return f"已经编辑{path}"
+    except Exception as e:
+        return f"错误: {str(e)}"
+
+def run_glob(pattern: str) -> str:
+    try:
+        # 获取安全路径
+        results = []
+        # 遍历所有匹配到的路径
+        for match in glob.glob(pattern, root_dir=WORKDIR):
+
+            # 检查匹配到的路径是否是相对于这个WORKDIR的子路径
+            if (WORKDIR / match).resolve().is_relative_to(WORKDIR):
+                results.append(match)
+            
+        return "\n".join(results) if results else "(没有匹配到任何文件)"
         
     except Exception as e:
         return f"错误: {str(e)}"
@@ -83,5 +105,5 @@ TOOL_HANDLERS = {
     "read_file": run_read,
     "write_file": run_write,
     "edit_file": run_edit,
-    # "glob": run_glob
+    "glob": run_glob
 }

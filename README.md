@@ -30,6 +30,7 @@
 - 列出当前目录下面的所有的python文件
 - 当前的这个git分支是什么哈
 - uv run ../MY-AGENT-LOOP/main.py
+- 查找所有的python文件
 
 
 ## tool_use
