@@ -1,6 +1,7 @@
 import os
 import subprocess
-from utils import decode_subprocess_output, safe_path, TEXT_ENCODING, WORKDIR
+from utils import decode_subprocess_output, safe_path
+from config import TEXT_ENCODING
 import platform
 """
 处理器
@@ -40,7 +41,7 @@ def run_bash(command: str) -> str:
 
 
 
-def run_read(path: str, limit: int|None) -> str:
+def run_read(path: str, limit: int | None) -> str:
     try:
         # 只能读取当前正在这个工作目录下面的这个子文件
         # 使用这个safe_path 校验并且获取文件的路径 并且指定这个编码读取内容并且按行分割
@@ -56,8 +57,13 @@ def run_read(path: str, limit: int|None) -> str:
 
 def run_write(path: str, content: str|None) -> str:
     try:
-        
-        pass
+        # 获取安全路径
+        file_path = safe_path(path)
+        # 确保父目录是存在的，不存在的话就会进行自动的创建
+        file_path.parent.mkdir(parents=True, exist_ok=True)
+        # 按照指定的编码写入指定的内容到指定的文件哈
+        file_path.write_text(content, encoding=TEXT_ENCODING)
+        return f"已经写入{len(content)}字节到{path}之中"
     except Exception as e:
         return f"错误: {str(e)}"
 
