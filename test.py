@@ -13,6 +13,8 @@ print(msg1)
 print(msg2)
 print("rm -rf" in "rm -rf")
 """
+import sys
+import os
 
 
 
@@ -22,4 +24,11 @@ print("rm -rf" in "rm -rf")
 
 img_data: bytes= b"\xff\xd8"
 
-print(img_data, type(img_data), img_data.decode(encoding="gbk"))
+# print(img_data, type(img_data), img_data.decode(encoding="gbk"))
+
+# chunks = list[bytes] = []
+
+sys.stdout.write("stdout")
+sys.stderr.write("stderr")
+sys.stdout.write("stdout")
+sys.stderr.write("stderr")

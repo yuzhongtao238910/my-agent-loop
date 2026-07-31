@@ -17,7 +17,7 @@ def execute_tool(name: str, args: dict) -> str:
     sig = inspect.signature(handler)
     # 从输入参数之中筛选出来处理函数所需要的有效的参数哈
     valid = {
-        k:v for k, v in args.items() if k in sig.patameters
+        k:v for k, v in args.items() if k in sig.parameters
     }
     return handler(**valid)
 

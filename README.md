@@ -19,3 +19,11 @@
 ## harness engineering 驾驭工程
 指的是ai智能体设计和构建约束得机制，以及反馈得回路，工程流程得控制，以及持续改进循环得系统工程实践
 引导智能体正确的工作
+
+
+
+## 提示词
+- 创建一个名为hello.py的文件，内容是打印这个helloworld
+- 列出当前目录下面的所有的python文件
+- 当前的这个git分支是什么哈
+- uv run ../MY-AGENT-LOOP/main.py

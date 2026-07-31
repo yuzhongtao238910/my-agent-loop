@@ -1,11 +1,14 @@
 import os
 import subprocess
-
-
+from utils import decode_subprocess_output
+import platform
 """
 处理器
 """
 
+def is_windows():
+    """检测当前系统是否为 Windows"""
+    return platform.system().lower() == "windows"
 
 def run_bash(command: str) -> str:
     # 定义一些危险的命令的列表
@@ -18,14 +21,17 @@ def run_bash(command: str) -> str:
         result = subprocess.run(
             command, # 要执行的命令
             shell=True, # 在shell之中执行
-            cmd=os.getcwd(), # 把当前的工作目录设置为当前的路径
+            cwd=os.getcwd(), # 把当前的工作目录设置为当前的路径
             capture_output=True, # 捕获标准的输出和标准错误输出
             timeout=120 # 超时时间设为120s
         )
-        print(result.stdout)
+        print(result.stdout, type(result.stdout))
         # stdout 以及这个 stderr 是 二进制的字节序列
-        out = (result.stdout or b"") + (result.stderr or b"")
-        
+        out = decode_subprocess_output( (result.stdout or b"") + (result.stderr or b"") ).strip()
+
+        # 如果有值返回前5w个，否则
+        return out[:50000] if out else "(没有输出)"
+         
 
     except subprocess.TimeoutExpired:
         return f"错误:超时（120s）"
