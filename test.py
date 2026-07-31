@@ -1,4 +1,4 @@
-
+from pathlib import Path
 
 """
 msg1 = (
@@ -32,3 +32,20 @@ sys.stdout.write("stdout")
 sys.stderr.write("stderr")
 sys.stdout.write("stdout")
 sys.stderr.write("stderr")
+
+
+
+WORKDIR = Path.cwd()
+
+
+# 不安全：绝对路径
+p3 = "/tmp/upload.exe"
+p4 = "C:\\Users\\EDY\\Desktop"
+path3 = (WORKDIR / p3).resolve()  # /tmp/upload.exe ❌
+
+print(path3, "46")
+
+
+path4 = (WORKDIR / p4).resolve()  # /tmp/upload.exe ❌
+
+print(path4, "51")

@@ -1,6 +1,7 @@
 
 
-
+from pathlib import Path
+from config import WORKDIR
 
 
 
@@ -24,3 +25,24 @@ def decode_subprocess_output(data: bytes | None)-> str:
         except UnicodeDecodeError:
             continue
     return data.decode("utf-8", errors="replace")
+
+
+
+# 安全路径
+def safe_path(p: str) -> Path:
+    """
+    此函数接受路径，返回一个path
+    """
+
+    # 得到p的绝对路径
+    # 
+    path = (WORKDIR / p).resolve()
+
+
+    # 判断path是不是在WORKDIR工作区域内部的子路径，如果不是就会抛出异常
+    # "../config/secret.txt"
+    # "/tmp/upload.exe"
+    if not path.is_relative_to(WORKDIR):
+        raise ValueError(f"超出工作区域:{p}")
+    # 返回最终安全生成的路径的对象哈
+    return path

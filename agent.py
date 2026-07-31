@@ -43,7 +43,7 @@ def agent_loop(messages: list):
             print(f"\x1b[36m {name}{json.dumps(args, ensure_ascii=False)} \x1b[0m")
             # 执行工具，获取输出的结果
             output = execute_tool(name, args)
-            # 需要把结果放入到这个里面哈
+            # 需要把结果放入到这个消息列表之中
             messages.append({
                 "role": "tool",
                 "content": output,

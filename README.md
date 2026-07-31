@@ -21,9 +21,21 @@
 引导智能体正确的工作
 
 
+## 一个循环+一个工具 = 一个agent
+
+
 
 ## 提示词
 - 创建一个名为hello.py的文件，内容是打印这个helloworld
 - 列出当前目录下面的所有的python文件
 - 当前的这个git分支是什么哈
 - uv run ../MY-AGENT-LOOP/main.py
+
+
+## tool_use
+- 工具分发映射dispatch(name)
+- bash
+- read_file
+- write_file
+- edit_file
+- glob
