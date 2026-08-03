@@ -52,6 +52,8 @@ def agent_loop(messages: list):
                     "content": reason + ".", # 拒绝的原因
                     "tool_call_id": tool_call.id # 关联的工具id
                 })
+                # 如果本次工具调用失败了，那么就会继续调用下一个工具
+                continue
             # 执行工具，获取输出的结果
             output = execute_tool(name, args)
             # 需要把结果放入到这个消息列表之中
