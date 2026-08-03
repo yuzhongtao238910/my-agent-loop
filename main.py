@@ -1,6 +1,11 @@
 
 from agent import agent_loop
 
+
+
+from hooks import trigger_user_prompt_hooks
+
+
 def main():
     print("输入问题，回车发送，输入q退出提问。\n")
 
@@ -17,6 +22,10 @@ def main():
         # 如果输入的内容是空的，或者是 q quit exit 就会推出哈
         if query.strip().lower() in ("q", "quit", "exit", ""):
             break;
+        # 触发"userPromptSubmit 进行前置处理"
+        query = trigger_user_prompt_hooks(query)
+        # print(query)
+
         history.append({
             "role": "user",
             "content": query

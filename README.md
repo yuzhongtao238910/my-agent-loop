@@ -48,8 +48,17 @@
 - check_permission
 
 
-##
+## 注
 - del /q tmp\\*
 - /q 指的是这个静默的模式 quiet 不提示这个确认直接删除
 - tmp\\* 删除tmp目录下面的所有的文件
 - 2026-07-18-04哈
+
+## hooks 挂到循环上，不写入循环内部
+- UserPromptSubmit 输入大模型之前的调用 可以注入一些上下文
+- PreToolUse 工具使用之前调用 权限检查 以及这个记录日志等等
+- PostToolUse handler执行之后，下一轮之前 large_output_hook 
+- stop 最终输出之前 例如这个summary_hook 摘要的钩子
+- 扩展逻辑挂在外面，循环本身一字不改
+- trigger_hooks()
+- agent的核心循环本身保持不变
