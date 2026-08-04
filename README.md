@@ -62,3 +62,11 @@
 - 扩展逻辑挂在外面，循环本身一字不改
 - trigger_hooks()
 - agent的核心循环本身保持不变
+
+
+
+## hook钩子函数
+- 读取readme文件
+
+
+## todowrite

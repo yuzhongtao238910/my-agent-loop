@@ -16,6 +16,7 @@ from tools.executor import execute_tool
 from permission import check_permission
 
 
+from hooks import trigger_hooks
 
 def agent_loop(messages: list):
     # 将最大的tokens数量设置为默认的值8000，未来这个值可能会变化
@@ -34,6 +35,17 @@ def agent_loop(messages: list):
         messages.append(assistant_message_dict(assistant))
         # 5、如果助手没有工具的调用，那么就会终止循环
         if not assistant.tool_calls:
+            # 调用这个trigger_hooks 触发名字是stop的钩子 传入当前的消息列表
+            force = trigger_hooks("Stop", messages)
+            if force:
+                # 说明活没干完，说明hook返回这个需要进一步处理的信息
+                # 有值得话就作为这个user的消息，来进一步这个处理
+                messages.append({
+                    "role": "user",
+                    "content": force
+                })
+                # 重新进入这个agent loop的流程
+                continue
             return
         # 6、助手需要调用工具，那么就是循环所有的工具的调用
         for tool_call in assistant.tool_calls:
@@ -42,20 +54,36 @@ def agent_loop(messages: list):
             # 获取参数
             print(tool_call)
             args = json.loads(tool_call.function.arguments or '{}')
-            print(f"\x1b[36m {name}{json.dumps(args, ensure_ascii=False)} \x1b[0m")
+            # print(f"\x1b[36m {name}{json.dumps(args, ensure_ascii=False)} \x1b[0m")
             # 进行权限的检查操作，对工具调用进行权限检查
-            reason = check_permission(name, args)
-            if reason is not None:
-                # 如果没有通过权限检查，将权限被拒绝的原因信息添加到消息列表之中
+            # reason = check_permission(name, args)
+
+            # if reason is not None:
+            #     # 如果没有通过权限检查，将权限被拒绝的原因信息添加到消息列表之中
+            #     messages.append({
+            #         "role": "tool", # 角色是工具
+            #         "content": reason + ".", # 拒绝的原因
+            #         "tool_call_id": tool_call.id # 关联的工具id
+            #     })
+            #     # 如果本次工具调用失败了，那么就会继续调用下一个工具
+            #     continue
+
+            # 工具调用前 触发这个PreToolUse 这个hook 返回是否允许工具执行
+            blocked = trigger_hooks("PreToolUse", name, args)
+            # 只要有一个hook函数返回了这个不是none的值，后面的hook不走了
+            if blocked:
                 messages.append({
                     "role": "tool", # 角色是工具
-                    "content": reason + ".", # 拒绝的原因
+                    "content": str(blocked) + ".", # 拒绝的原因
                     "tool_call_id": tool_call.id # 关联的工具id
                 })
-                # 如果本次工具调用失败了，那么就会继续调用下一个工具
                 continue
             # 执行工具，获取输出的结果
             output = execute_tool(name, args)
+
+            # 触发这个PostToolUse 这个hook进行后置处理
+            trigger_hooks("PostToolUse", name, args, output)
+
             # 需要把结果放入到这个消息列表之中
             messages.append({
                 "role": "tool",

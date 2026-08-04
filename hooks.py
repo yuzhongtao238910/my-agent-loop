@@ -4,7 +4,7 @@
 
 
 
-
+import json
 
 
 
@@ -52,6 +52,8 @@ DESTRUCTIVE = [
 def register_hook(event: str, callback):
     HOOKS[event].append(callback)
 
+
+# 在工具调用前进行权限判断，如果不通过，返回不为none，如果通过了，返回none
 def permission_hook(name: str, args: dict):
     if name == "bash" or name == "cmd":
         for pattern in DENY_LIST:
@@ -80,6 +82,38 @@ def permission_hook(name: str, args: dict):
                 return f"用户拒绝执行"
     return None
 
+# 这是打印调用信息的钩子
+def log_hook(name: str, args: dict):
+
+    # args_preview = str(list(args.values())[:2])[:60]
+    print(f"\x1b[36m [hook][PreToolUse]{name}{json.dumps(args, ensure_ascii=False)} \x1b[0m")
+
+    return None
+
+
+def large_output_hook(name: str, args: dict, output):
+    if len(str(output)) > 10:
+        print(f"\x1b[33m [hook][PostToolUse]: {name}输出的结果过大:{len(str(output))}字符 \x1b[0m")
+
+
+
+def summary_hook(messages: list):
+    # 统计本地会话之中工具调用的次数
+    tool_count = sum(1 for m in messages if m.get("role") == "tool")
+    print(f"\x1b[90m [hook][Stop]: 本次会话共计使用{tool_count}次工具调用 \x1b[0m")
+    return None
+
+# 触发通过hook函数
+def trigger_hooks(event: str, *args):
+    # 按照注册的顺序依次触发对应事件的hook
+    for callback in HOOKS[event]:
+        # 调用这个hook函数获取返回值
+        result = callback(*args)
+        # 不为none的话，就会终止执行，并且返回这个result
+        if result is not None:
+            return result
+    # 如果所有的hook都返回none，就是通过了
+    return None
 
 
 # 触发用户相关的hook
@@ -101,4 +135,12 @@ def workspace_inject_hook(query: str) -> str | None:
 
 register_hook("UserPromptSubmit", workspace_inject_hook)
 
+# 注册这个权限钩子
 register_hook("PreToolUse", permission_hook)
+
+register_hook("PreToolUse", log_hook)
+
+register_hook("PostToolUse", large_output_hook)
+
+
+register_hook("Stop", summary_hook)
