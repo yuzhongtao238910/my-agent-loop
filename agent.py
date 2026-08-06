@@ -18,7 +18,15 @@ from permission import check_permission
 
 from hooks import trigger_hooks
 
+
+
+# 定义变量，用于记录上次todo_write调用以来的
+# while true 走的次数
+rounds_since_todo = 0
+
 def agent_loop(messages: list):
+    # 声明这个是全局变量
+    global rounds_since_todo
     # 将最大的tokens数量设置为默认的值8000，未来这个值可能会变化
     max_tokens = DEFAULT_MAX_TOKENS
     # 把模型先设置为这个默认模型，未来如果这个默认模型不能使用的话，就可以切换为备用的模型
@@ -26,6 +34,15 @@ def agent_loop(messages: list):
     while True:
         # 1、获取系统的提示词
         system = get_system_prompt()
+        # every这个3lun 提示一次，更新下列表哈
+        if rounds_since_todo >= 3 and messages:
+            # 初始有一个计划，然后这个没事这个提示一下进度
+            messages.append({
+                "role": "user",
+                "content": "<reminder>请及时更新你的todo列表</reminder>"
+            })
+            print(f"\x1b[33m 请更新你的todo列表 \x1b[0m ")
+            rounds_since_todo = 0
         # 2、调用大模型
         response = call_llm(system, messages, max_tokens, model)
         choice = response.choices[0]
@@ -33,6 +50,10 @@ def agent_loop(messages: list):
         assistant = choice.message
         # 4、放入这个messages里面
         messages.append(assistant_message_dict(assistant))
+
+        # 每一轮调用加1
+        rounds_since_todo += 1
+
         # 5、如果助手没有工具的调用，那么就会终止循环
         if not assistant.tool_calls:
             # 调用这个trigger_hooks 触发名字是stop的钩子 传入当前的消息列表
@@ -83,7 +104,9 @@ def agent_loop(messages: list):
 
             # 触发这个PostToolUse 这个hook进行后置处理
             trigger_hooks("PostToolUse", name, args, output)
-
+            # 如果本地调用的工具就是这个todo_wtite  那么就会重置为0 哈
+            if name == "todo_write":
+                rounds_since_todo = 0;
             # 需要把结果放入到这个消息列表之中
             messages.append({
                 "role": "tool",

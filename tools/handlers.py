@@ -115,8 +115,20 @@ def run_todo_write(todos: list) -> str:
     CURRENT_TODOS = todos
 
     lines = [
-        "\n\x1b33m##当前任务\x1b[0m"
+        "\n\x1b[33m##当前任务\x1b[0m"
     ]
+
+    for todo in CURRENT_TODOS:
+        icon = {
+            "pending": "\x1b[33m 等待之中 \x1b[0m ",
+            "in_progress": "\x1b[34m 处理之中 \x1b[0m ",
+            "completed": "\x1b[32m 已完成 \x1b[0m ",
+        }[todo["status"]]
+        lines.append(f"- [{icon}]{todo['content']}")
+
+    print("\n".join(lines))
+
+    return f"已经更新{len(CURRENT_TODOS)}个任务"
         
 
 

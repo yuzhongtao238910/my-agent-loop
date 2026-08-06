@@ -92,7 +92,7 @@ def log_hook(name: str, args: dict):
 
 
 def large_output_hook(name: str, args: dict, output):
-    if len(str(output)) > 10:
+    if len(str(output)) > 10000:
         print(f"\x1b[33m [hook][PostToolUse]: {name}输出的结果过大:{len(str(output))}字符 \x1b[0m")
 
 
