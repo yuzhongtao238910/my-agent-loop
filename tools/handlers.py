@@ -98,6 +98,29 @@ def run_glob(pattern: str) -> str:
     except Exception as e:
         return f"错误: {str(e)}"
 
+
+
+# 全局变量 用于存储当前的任务列表，类型为这个list[dict]
+CURRENT_TODOS: list[dict] = []
+
+
+# 定义更新这个CURRENT_TODOS 这个函数
+def run_todo_write(todos: list) -> str:
+    global CURRENT_TODOS
+    for index, todo in enumerate(todos):
+        if "content" not in todo or "status" not in todo:
+            return f"错误：todos[{index}] 缺少content或者status字段"
+        if todo["status"] not in ("pending", "in_progress", "completed"):
+            return f"错误：todos[{index}] 状态无效"
+    CURRENT_TODOS = todos
+
+    lines = [
+        "\n\x1b33m##当前任务\x1b[0m"
+    ]
+        
+
+
+
 # 定义字典，把工具的名称和真正的处理函数关联起来
 TOOL_HANDLERS = {
     "bash": run_bash,
@@ -105,5 +128,6 @@ TOOL_HANDLERS = {
     "read_file": run_read,
     "write_file": run_write,
     "edit_file": run_edit,
-    "glob": run_glob
+    "glob": run_glob,
+    "todo_write": run_todo_write
 }

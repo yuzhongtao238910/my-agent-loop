@@ -70,3 +70,17 @@
 
 
 ## todowrite
+- 可以在这个给他一个复杂任务，todowrite 先列一个计划清单，然后再这个
+- 待办事项
+- 进行之中
+- 完成
+- todowrite给模型一份可见的计划，
+- 做着做着提示词的作用越来越小
+- Nag Reminder 催促更新机制 
+- todo_write本身不做任何这个机制
+- 连续几轮没有调用这个todo_write就会添加这个提醒哈
+- 拆分为这个todolist 每次完成一项就会打一个对勾哈
+- 
+
+
+## subagent
