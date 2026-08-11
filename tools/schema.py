@@ -67,4 +67,11 @@ TOOLS = [
             }
         }
     }, ["todos"]),
+    _fn_tool(
+        "read_file", 
+        f"读取文件的内容", 
+        {"path": {"type": "string"}, 
+        "limit": {"type": "integer"}},
+        ["path"]
+    ),
 ]
