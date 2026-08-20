@@ -40,38 +40,50 @@ def get_shell_tool():
 
 
 
-TOOLS = [
+BASE_TOOLS = [
     get_shell_tool(),    
     _fn_tool("read_file", f"读取文件的内容", {"path": {"type": "string"}, "limit": {"type": "integer"}}, ["path"]),
     _fn_tool("write_file", f"将内容写入文件", {"path": {"type": "string"}, "content": {"type": "string"}}, ["path", "content"]),
     _fn_tool("edit_file", f"在文件之中精确替换文本（仅仅会替换一次）", {"path": {"type": "string"}, "old_text": {"type": "string"}, "new_text": {"type": "string"}}, ["path", "old_text", "new_text"]),
     _fn_tool("glob", f"按照glob模式查询文件", {"pattern": {"type": "string"}}, ["pattern"]),
+    
+
+]
+
+
+TOOLS = [
+    *BASE_TOOLS,
     _fn_tool(
         "todo_write", 
         f"创建并且管理当前编码会话的任务列表", 
         {
-        "todos": {
-            "type": "array", 
-            "items": {
-                "type": "object",
-                "properties": {
-                    "content": {
-                        "type": "string" 
+            "todos": {
+                "type": "array", 
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "content": {
+                            "type": "string" 
+                        },
+                        "status": { 
+                            "type": "string",
+                            "enum": ["pending", "in_progress", "completed"]
+                        }
                     },
-                    "status": { 
-                        "type": "string",
-                        "enum": ["pending", "in_progress", "completed"]
-                    }
-                },
-                "required": ["content", "status"]
+                    "required": ["content", "status"]
+                }
             }
-        }
-    }, ["todos"]),
+        }, 
+        ["todos"]
+    ),
     _fn_tool(
-        "read_file", 
-        f"读取文件的内容", 
-        {"path": {"type": "string"}, 
-        "limit": {"type": "integer"}},
-        ["path"]
+        "spawn_subagent", # 派生子代理 
+        f"启动子agent处理复杂的子任务,仅返回最终的结论", 
+        {
+            "description": {
+                "type": "string", 
+            }
+        }, 
+        ["description"]
     ),
 ]

@@ -129,7 +129,10 @@ def run_todo_write(todos: list) -> str:
     print("\n".join(lines))
 
     return f"已经更新{len(CURRENT_TODOS)}个任务"
-        
+
+
+
+
 
 
 
@@ -141,5 +144,5 @@ TOOL_HANDLERS = {
     "write_file": run_write,
     "edit_file": run_edit,
     "glob": run_glob,
-    "todo_write": run_todo_write
+    "todo_write": run_todo_write,
 }

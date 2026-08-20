@@ -46,3 +46,11 @@ def safe_path(p: str) -> Path:
         raise ValueError(f"超出工作区域:{p}")
     # 返回最终安全生成的路径的对象哈
     return path
+
+
+def extract_text(content: str) -> str:
+    if content is None:
+        return ""
+    if isinstance(content, str):
+        return content
+    return str(content)
