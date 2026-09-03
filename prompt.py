@@ -12,15 +12,28 @@ PROMPT_SECTIONS = {
         f"你将在需要使用命令的情况下使用Windows CMD环境下执行任务，使用CMD完成任务"
         f"所有破坏性的操作都需要用户批准"
         f"开始多步骤任务之前,先使用todo_write规划步骤,执行过程之中及时更新状态"
-        f"遇到复杂子问题的时候，使用spawn_subagent工具派生子agent"
-    )
+        f"遇到复杂子问题的时候,使用spawn_subagent工具派生子agent"
+    ),
+    "workspace": f"工作目录是:{WORKDIR}",
+    "skill": "需要完整的技术说明的时候,使用load_skill加载相关的文档"
 }
 
 
-# 系统提示词
+def _assemble_system_prompt_(skills: str) -> str:
+    sections = [PROMPT_SECTIONS["identity"], PROMPT_SECTIONS["workspace"]]
+    if skills:
+        sections.append(f"可用的技能：\n{skills}")
+        sections.append(PROMPT_SECTIONS["skill"])
+    return "\n\n".join(sections)
 
+def _skills_text_():
+    pass
+
+
+# 系统提示词
 def get_system_prompt() -> str:
-    return PROMPT_SECTIONS["identity"]
+    # return PROMPT_SECTIONS["identity"]
+    return _assemble_system_prompt_(_skills_text_())
 
 
 # 定义子agent的系统提示词
