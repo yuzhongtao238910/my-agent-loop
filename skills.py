@@ -43,6 +43,7 @@ def _scan_skills():
         SKILL_REGISTRY[name] = {
             "name": name, # 技能得名字
             "description": description, # 技能得描述
+            "when_to_use": "", # 先空着
             "content": _body # 技能得正文
         }
 
