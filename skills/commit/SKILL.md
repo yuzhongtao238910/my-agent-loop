@@ -1,12 +1,6 @@
 ---
 name: commit
-description: |
-  根据当前的改动来生成通用规范的 commit message，但是不会执行 git 提交。
-  只读取 git status / git diff / git log，产出 Conventional Commits 格式的完整提交说明，不执行 git add、git commit、git push。
-  触发词：「commit message」「生成 commit」「写一下提交说明」「commit 文案」「提交信息」
-  「帮我写 commit」「需要 commit message」「给我个 commit」。
-  即使用户只说「帮我 commit 一下文案」「这条改动怎么写 commit」且没有要求真正提交，也应触发。
-  用户明确要求执行 git commit / 提交代码时，不要用本 skill 代替提交；本 skill 只负责生成 message。
+description: 根据当前的改动来生成通用规范的 commit message，但是不会执行 git 提交。只读取 git status / git diff / git log，产出 Conventional Commits 格式的完整提交说明，不执行 git add、git commit、git push。触发词：「commit message」「生成 commit」「写一下提交说明」「commit 文案」「提交信息」「帮我写 commit」「需要 commit message」「给我个 commit」。即使用户只说「帮我 commit 一下文案」「这条改动怎么写 commit」且没有要求真正提交，也应触发。用户明确要求执行 git commit / 提交代码时，不要用本 skill 代替提交；本 skill 只负责生成 message。
 ---
 
 # 生成 Commit Message

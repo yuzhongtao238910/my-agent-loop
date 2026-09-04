@@ -4,6 +4,7 @@ from utils import decode_subprocess_output, safe_path
 from config import TEXT_ENCODING, WORKDIR
 import platform
 import glob
+from skills import run_load_skill
 """
 处理器
 """
@@ -145,4 +146,5 @@ TOOL_HANDLERS = {
     "edit_file": run_edit,
     "glob": run_glob,
     "todo_write": run_todo_write,
+    "load_skill": run_load_skill
 }

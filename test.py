@@ -14,3 +14,17 @@ SKILLS_DIR = WORKDIR / "skills"
 
 for dir in sorted(SKILLS_DIR.iterdir()):
     print(dir)
+
+
+
+
+
+# 使用乱码符号来防止这个程序崩溃
+content = (WORKDIR / "text.md").read_text(encoding="utf-8", errors="replace")
+print(content)
+
+
+SKILL_REGISTRY = {}
+
+if not SKILL_REGISTRY:
+    print("30")

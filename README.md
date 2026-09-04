@@ -152,4 +152,17 @@
 - load_skill(skill_name) 运行的时候来实际读取skill
 - 使用到的时候才会花费token
 - skills/目录
-- 
+
+
+## 读文件
+- content = (WORKDIR / "text.md").read_text(encoding="utf-8", errors="replace")
+- errors 是一个这个枚举值，
+    - replace 容忍乱码
+    - ignore 丢弃异常数据
+    - strict 严格模式 解码失败得话，就直接报错
+    - backslashreplace 
+
+## 提示词
+- 有哪些可用得技能
+- 加载户晨风这个技能，然后以户子的视角告诉我失恋了怎么办？
+- 加载commit这个技能，给我生成一个message

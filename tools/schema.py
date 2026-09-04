@@ -86,4 +86,14 @@ TOOLS = [
         }, 
         ["description"]
     ),
+    _fn_tool(
+        "load_skill", # 加载技能
+        f"按照名称来加载技能的完整内容", 
+        {
+            "name": {
+                "type": "string", 
+            }
+        }, 
+        ["name"]
+    ),
 ]

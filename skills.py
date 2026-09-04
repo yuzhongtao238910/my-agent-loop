@@ -6,6 +6,8 @@
 
 from config import SKILLS_DIR, TEXT_ENCODING
 
+from utils import parse_frontmatter
+
 # 定义一个全局字典，用于存放技能信息，key是自字符串，value是字典
 SKILL_REGISTRY = {}
 
@@ -21,7 +23,39 @@ def _scan_skills():
         # 如果不是目录，那么就会跳过哈
         if not dir.is_dir():
             continue
+        # 构建描述文件的路径
+        manifest = dir / "SKILL.md"
+        # 如果描述文件不存在，就会继续跳过
+        if not manifest.exists():
+            continue
+
+        # 读取文件内容
+        # errors
+        raw = manifest.read_text(encoding=TEXT_ENCODING, errors="replace")
+
+        # 解析meta数据，获取元信息和正文内容
+        meta, _body = parse_frontmatter(raw)
+
+        name = meta.get("name", dir.name)
+        description = meta.get("description", _body.split("\n")[0].lstrip("#").strip())
+
+        # 将技能信息存入全局
+        SKILL_REGISTRY[name] = {
+            "name": name, # 技能得名字
+            "description": description, # 技能得描述
+            "content": _body # 技能得正文
+        }
+
 
 
 
 _scan_skills()
+
+
+def run_load_skill(name: str):
+    skill = SKILL_REGISTRY.get(name)
+    if not skill:
+        return f"没有找到技能{name}"
+
+    print(f"\x1b[90m [技能{name}已经加载] {name} \x1b[0m ")
+    return skill["content"]

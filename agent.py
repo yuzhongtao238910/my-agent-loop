@@ -34,6 +34,7 @@ def agent_loop(messages: list):
     while True:
         # 1、获取系统的提示词
         system = get_system_prompt()
+        # print("system", system)
         # every这个3lun 提示一次，更新下列表哈
         if rounds_since_todo >= 3 and messages:
             # 初始有一个计划，然后这个没事这个提示一下进度

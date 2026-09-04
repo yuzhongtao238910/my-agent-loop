@@ -54,3 +54,32 @@ def extract_text(content: str) -> str:
     if isinstance(content, str):
         return content
     return str(content)
+
+
+def parse_frontmatter(text: str):
+    # 如果文本不是以这个 --- 开头，就返回空字典和原始文本
+    if not text.startswith("---"):
+        return {}, text
+
+    # 使用---分割
+    # 空字符串 metadata content
+    parts = text.split("---", 2)
+
+    if len(parts) < 3:
+        return {}, text
+
+    # 先创建一个空的字典，用于存储metadata
+    meta = {}
+    # 遍历
+    # frontmatter 指的是skill.md开头的yaml的元数据快，使用---包裹
+    for line in parts[1].strip().splitlines():
+        if ":" in line:
+            k, v = line.split(":", 1)
+            meta[k.strip()] = v.strip().strip("'").strip('"')
+    # 返回元数据，内容
+    # print(meta, 80)
+    return meta, parts[2].strip()
+
+
+
+    

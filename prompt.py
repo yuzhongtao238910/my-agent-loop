@@ -2,6 +2,7 @@
 
 from config import WORKDIR
 
+from skills import SKILL_REGISTRY
 
 
 # 定义一个提示词片段的字典
@@ -27,8 +28,13 @@ def _assemble_system_prompt_(skills: str) -> str:
     return "\n\n".join(sections)
 
 def _skills_text_():
-    pass
+    if not SKILL_REGISTRY:
+        return ""
 
+    # 便利技能注册表，为每一项技能生成md得列表条目，并且拼接返回
+    return "\n".join(
+        f"- **{skill['name']}**: {skill['description']}" for skill in SKILL_REGISTRY.values()
+    )
 
 # 系统提示词
 def get_system_prompt() -> str:
